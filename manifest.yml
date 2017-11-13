@@ -1,0 +1,9 @@
+---
+applications:
+- name: demoqbrapp-test
+  memory: 1GB
+  instances: 1
+
+  services:
+     - pas-mysql
+
