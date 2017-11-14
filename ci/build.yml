@@ -14,4 +14,6 @@ outputs:
   - name: demoqbr-app
 
 run:
-  path: resource-demoapp-repo/ci/build.sh
+  path: bash
+  args: ['-c', 'git clone resource-demoapp-repo demoqbr-app; cd demoqbr-app; mvn clean; mvn install']
+
