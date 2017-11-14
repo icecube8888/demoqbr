@@ -1,0 +1,28 @@
+resources:
+# resource for my GitHub repo
+- name: resource-demoapp-repo
+  type: git
+  source:
+    uri: https://github.com/icecube8888/demoqbr.git
+    branch: master
+# resource for my Cloud Foundry target
+- name: resource-pws
+  type: cf
+  source:
+    api: api.run.pivotal.io
+    username: cahoki8888@gmail.com
+    password: Password123!
+    organization: zxy-org
+    space: development
+
+jobs:
+- name: build-binary-&-deploy-to-prod
+  plan:
+    - get: resource-demoapp-repo
+      trigger: true
+    - task: build-task
+      privileged: true
+      file: resource-demoapp-repo/ci/build.yml
+    - put: resource-pws
+      params:
+        file: resource-app/target/demoqbrapp-0.0.1-SNAPSHOT.jar
