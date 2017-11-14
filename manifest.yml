@@ -3,6 +3,7 @@ applications:
 - name: demoqbrapp-test
   memory: 1GB
   instances: 1
+  buildpack: https://github.com/cloudfoundry/java-buildpack.git
   
   services:
      - pas-mysql
