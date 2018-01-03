@@ -12,8 +12,13 @@ public class MainController {
 	@Autowired
 
 	private UserRepository userRepository;
-	String result = "<html><head><style>body { background-color: green;}</style>\n" +
-			"</head><body><p><font size=16>My QBR Application version 1.1</font></p></body></html>";
+	String result = "<html><head><style>body { background-color: no-color;}</style>\n" +
+			"</head><body><p><font size=16>My Demo Application version 1.0</font></p>" +
+			"<p><a href=\"/whoami\">whoami</a></p>" +
+			"<p><a href=\"/crashme\">crashme</a></p>" +
+			"<p><a href=\"/add\">add record usage: add?name=nameabc&email=emailabc</a></p>" +
+			"<p><a href=\"/all\">show all records</a></p>" +
+			"</body></html>";
 
 	@GetMapping(path="/") //git commit -m "First commit"
 	public @ResponseBody String mainpage () {
@@ -28,7 +33,8 @@ public class MainController {
 
 		try{
 			String ip = InetAddress.getLocalHost().getHostAddress();
-			return "This application is running on " + ip;
+			return "This application is running on " + ip+
+					"\n <p><a href=\"/\">Back</a></p>";
 		}catch (Exception e)
 		{
 			return "Exception";
@@ -50,7 +56,7 @@ public class MainController {
 		n.setName(name);
 		n.setEmail(email);
 		userRepository.save(n);
-		return "Saved";
+		return "Saved \n <p><a href=\"/\">Back</a></p>";
 	}
 	
 	@GetMapping(path="/all")
