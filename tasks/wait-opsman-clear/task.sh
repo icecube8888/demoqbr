@@ -24,7 +24,7 @@ function main() {
 
   local cwd
   cwd="${1}"
-  sed -i '/dns-nameservers 8.8.8.8 8.8.4.4/c\        dns-nameservers 1.2.3.4 1.2.3.4' /etc/network/interfaces
+  #sed -i '/dns-nameservers 8.8.8.8 8.8.4.4/c\        dns-nameservers 1.2.3.4 1.2.3.4' /etc/network/interfaces
   set +e
   while :
   do
