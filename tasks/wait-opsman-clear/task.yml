@@ -1,7 +1,3 @@
-#!/bin/bash
-
-set -eu
-
 # Copyright 2017-Present Pivotal Software, Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,60 +12,22 @@ set -eu
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#This script polls ops mgr waiting for pending changes and running installs to be empty before beginning
-#POLL_INTERVAL controls how quickly the script will poll ops mgr for changes to pending changes/running installs
+---
+platform: linux
 
-POLL_INTERVAL=30
-function main() {
+image_resource:
+  type: docker-image
+  source: {repository: czero/rootfs}
 
-  local cwd
-  cwd="${1}"
+inputs:
+  - name: pcf-pipelines
 
-  set +e
-  while :
-  do
+params:
+  OPSMAN_CLIENT_ID:
+  OPSMAN_CLIENT_SECRET:
+  OPSMAN_USERNAME:
+  OPSMAN_PASSWORD:
+  OPSMAN_DOMAIN_OR_IP_ADDRESS:
 
-      om-linux --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
-           --skip-ssl-validation \
-           --client-id "${OPSMAN_CLIENT_ID}" \
-           --client-secret "${OPSMAN_CLIENT_SECRET}" \
-           --username "${OPSMAN_USERNAME}" \
-           --password "${OPSMAN_PASSWORD}" \
-            curl -path /api/v0/staged/pending_changes > changes-status.txt
-
-      if [[ $? -ne 0 ]]; then
-        echo "Could not login to ops man"
-        cat changes-status.txt
-        exit 1
-      fi
-
-      om-linux --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
-           --skip-ssl-validation \
-           --client-id "${OPSMAN_CLIENT_ID}" \
-           --client-secret "${OPSMAN_CLIENT_SECRET}" \
-           --username "${OPSMAN_USERNAME}" \
-           --password "${OPSMAN_PASSWORD}" \
-           curl -path /api/v0/installations > running-status.txt
-
-      if [[ $? -ne 0 ]]; then
-        echo "Could not login to ops man"
-        cat running-status.txt
-        exit 1
-      fi
-
-      grep "action" changes-status.txt
-      ACTION_STATUS=$?
-      jq -e -r '.installations[0] | select(.status=="running")' running-status.txt >/dev/null
-      RUNNING_STATUS=$?
-
-      if [[ ${ACTION_STATUS} -ne 0 && ${RUNNING_STATUS} -ne 0 ]]; then
-          echo "No pending changes or running installs detected. Proceeding"
-          exit 0
-      fi
-      echo "Pending changes or running installs detected. Waiting"
-      sleep $POLL_INTERVAL
-  done
-  set -e
-}
-
-main "${PWD}"
+run:
+  path: pcf-pipelines/tasks/wait-opsman-clear/task.sh
