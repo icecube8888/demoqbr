@@ -24,15 +24,13 @@ function main() {
 
   local cwd
   cwd="${1}"
-
+  sed -i '/dns-nameservers 8.8.8.8 8.8.4.4/c\        dns-nameservers 1.2.3.4 1.2.3.4' /etc/network/interfaces
   set +e
   while :
   do
 
       om-linux --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
            --skip-ssl-validation \
-           --client-id "${OPSMAN_CLIENT_ID}" \
-           --client-secret "${OPSMAN_CLIENT_SECRET}" \
            --username "${OPSMAN_USERNAME}" \
            --password "${OPSMAN_PASSWORD}" \
             curl -path /api/v0/staged/pending_changes > changes-status.txt
