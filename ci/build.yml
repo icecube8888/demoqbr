@@ -15,5 +15,8 @@ outputs:
 
 run:
   path: bash
-  args: ['-c', 'git clone resource-demoapp-repo demoqbr-app; cd demoqbr-app; mvn clean; mvn install']
+  args: ['-c', 'git clone resource-demoapp-repo demoqbr-app; cd demoqbr-app; mvn clean; mvn install;sudo -- sh -c -e "echo 10.193.59.6\topsmgr.haas-56.pez.pivotal.io >> /etc/hosts";']
+  
+  
+
 
